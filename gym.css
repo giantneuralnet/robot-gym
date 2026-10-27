@@ -160,7 +160,7 @@ body #recordClip.recording,body .clip-record.recording{position:relative;font-si
 
 /* Teach clips are a separate strip above the single-row toolbar. */
 #gymTransport[data-mode=teach]{display:grid;grid-template-columns:max-content max-content max-content minmax(42px,1fr);gap:8px;justify-content:center}
-#gymTransport[data-mode=teach]:has(#teachSide:not([hidden])){width:min(760px,calc(100% - 20px));max-width:calc(100% - 20px)}
+#gymTransport[data-mode=teach]:has(#teachSide:not([hidden])){width:max-content;max-width:calc(100% - 20px)}
 #teachClipRow{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(var(--control-height) + 38px + env(safe-area-inset-bottom));width:max-content;max-width:calc(100% - 20px);overflow-x:auto;z-index:4}
 #teachClipRow #teachClipKeys{display:flex;flex-wrap:nowrap;gap:6px;margin:0;padding:0;border:0;width:max-content}
 #gymTransport[data-mode=teach] #teachControls{grid-row:1;grid-column:1}
@@ -177,3 +177,23 @@ body #recordClip.recording,body .clip-record.recording{position:relative;font-si
 #jointControlPanel.collapsed .joint-angle-form{display:none}
 
 #modelMenu summary.panel-title{list-style:none;font-weight:600;color:#b9d8ff}#modelMenu summary.panel-title::-webkit-details-marker{display:none}
+
+/* Shared spacing for floating panels and tool groups. */
+:root{--panel-padding:8px;--panel-gap:8px}
+#jointControlPanel,#takesPanel,#clipsSide,#partPopup,.joint-settings,.toolbar.build-ui,.object-tools,#gymTransport{padding:var(--panel-padding)!important;gap:var(--panel-gap)}
+#networkView[data-mode=learn]>#learnSide{padding:var(--panel-padding)}
+#modelMenu{padding:var(--panel-padding)}
+#modelMenu summary.panel-title{padding:0 4px;display:flex;align-items:center;height:var(--control-height);box-sizing:border-box}
+.model-fields{padding:var(--panel-gap) 0 0;gap:var(--panel-gap)}
+.joint-control-heading,.takes-heading{padding:0;margin:0 0 var(--panel-gap);gap:var(--panel-gap);border:0;min-height:var(--control-height)}
+#jointControlPanel.collapsed .joint-control-heading,#takesPanel.collapsed .takes-heading{margin:0}
+.joint-pulse-settings,.agent-bridge-row{gap:var(--panel-gap);margin-bottom:var(--panel-gap)}
+.joint-pulse-settings label{gap:var(--panel-gap)}
+.joint-control-row{gap:var(--panel-gap);margin-top:var(--panel-gap)}
+.joint-control-row:first-child{margin-top:0}
+.joint-angle-form{gap:var(--panel-gap);margin-top:var(--panel-gap)}
+#clipList,.clip-row,.input-row,#trainControls,#runControls,#teachControls,#sessionActions,.eval-rate,#rigTemplates,.side-bottom,#teachClipRow #teachClipKeys{gap:var(--panel-gap)!important}
+#newClipSlot{margin-top:var(--panel-gap)}
+#takeList{display:flex;flex-direction:column;gap:var(--panel-gap)}
+.take-row{gap:var(--panel-gap);padding:0}
+#gymTransport[data-mode=teach]{grid-template-columns:repeat(3,max-content) 42px;gap:var(--panel-gap)}
