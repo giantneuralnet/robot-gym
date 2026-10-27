@@ -46,7 +46,7 @@ function drawTakePrediction(){
   let min=Infinity,max=-Infinity;for(const v of values){min=Math.min(min,v);max=Math.max(max,v)}if(!values.length){min=0;max=1}
   const pad=Math.max(group.id==='joints'?3:.02,(max-min)*.1),lo=min-pad,hi=max+pad;
   c.fillStyle='#c0cce0';c.textAlign='left';c.fillText(group.title+' ('+group.unit+')',left,y0+9);c.textAlign='right';c.fillStyle='#8fa1b9';c.fillText(group.note,w-right,y0+9);
-  for(let i=0;i<=2;i++){const y=top+ph*i/2;c.strokeStyle='#34464e80';c.lineWidth=1;c.setLineDash([]);c.beginPath();c.moveTo(left,y);c.lineTo(w-right,y);c.stroke();c.textAlign='right';c.fillStyle='#8fa1b9';const value=hi-(hi-lo)*i/2;c.fillText(group.id==='joints'?value.toFixed(0):value.toFixed(2),left-7,y)}
+  const ticks=ph<32?1:2;for(let i=0;i<=ticks;i++){const y=top+ph*i/ticks;c.strokeStyle='#34464e80';c.lineWidth=1;c.setLineDash([]);c.beginPath();c.moveTo(left,y);c.lineTo(w-right,y);c.stroke();c.textAlign='right';c.fillStyle='#8fa1b9';const value=hi-(hi-lo)*i/ticks;c.fillText(group.id==='joints'?value.toFixed(0):value.toFixed(2),left-7,y)}
   for(let i=0;i<=4;i++){const x=left+pw*i/4;c.strokeStyle='#34464e45';c.beginPath();c.moveTo(x,top);c.lineTo(x,top+ph);c.stroke()}
   c.save();c.beginPath();c.rect(left,top,pw,ph);c.clip();
   for(const curve of group.curves)for(const trace of curve.traces){c.strokeStyle=curve.color;c.lineWidth=trace.dash.length?1.6:1.4;c.setLineDash(trace.dash);c.beginPath();let drawing=false;for(const p of trace.points){if(!Number.isFinite(p.v)||!Number.isFinite(p.t)){drawing=false;continue}const x=left+p.t/end*pw,y=top+(hi-p.v)/(hi-lo)*ph;if(drawing)c.lineTo(x,y);else c.moveTo(x,y);drawing=true}c.stroke()}
