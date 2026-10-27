@@ -100,3 +100,52 @@ body .icon,body #removeFollow,body #closeTakePrediction,body #nextClipKey,body .
 #sessionActions #toggleJointControls{order:-1}
 
 .agent-bridge-row{display:flex;align-items:center;gap:9px;margin-bottom:10px}.agent-bridge-row button{padding:0 12px}.agent-bridge-row span{font-size:11px;color:#a6c9f5}
+
+/* Compact per-channel switches for recorded inputs and joint predictions. */
+#learnSide #takePredictionLegend{display:flex;flex-direction:column;gap:3px;max-height:91px;overflow:auto;flex:none;font-size:10px}
+.take-legend-group{display:flex;gap:3px;flex-wrap:wrap;align-items:center}
+#takePredictionLegend button{min-height:22px;padding:2px 6px;border-radius:5px;font:10px var(--mono);background:#242c38;border:1px solid #46546b;cursor:pointer}
+#takePredictionLegend .take-group-toggle{color:#c0cce0;min-width:62px;text-align:left;background:#2b3b52}
+#takePredictionLegend .take-series-toggle:before{content:'●';margin-right:4px}
+#takePredictionLegend button[aria-pressed="false"]{opacity:.4;background:#1c222d}
+#takePredictionLegend button:focus-visible{outline:2px solid #62adff;outline-offset:1px}
+
+#networkView[data-mode=learn] #takePredictionLegend{flex-wrap:nowrap;flex-direction:column;align-items:stretch;max-height:82px;width:100%;gap:3px;overflow:auto}
+#networkView[data-mode=learn] #takePredictionLegend .take-legend-group{flex:0 0 auto;min-width:0}
+#networkView[data-mode=learn] #takePredictionLegend button{height:22px!important;min-height:22px!important;max-height:22px!important;padding:0 6px!important;font-size:10px!important;border-radius:5px!important;line-height:normal!important}
+#networkView[data-mode=learn] #takePredictionLegend .take-series-toggle{color:inherit}
+#networkView[data-mode=learn] #trainingPlot{flex:.7 1 0}
+#learnSide #takePredictionPanel{flex:2.4 1 0}
+.clip-row input,#clipName{min-width:0}
+.clip-done{flex:none;width:auto!important;padding:0 9px!important}
+#recordClip.recording,.clip-record.recording{font-size:22px!important}
+
+/* Panels remain available through their headings, without toolbar switches. */
+body #jointControlPanel .panel-title,body #takesPanel .panel-title{border:0!important;background:transparent!important;text-align:left;flex:1;padding:0 4px!important;box-shadow:none;font-weight:600}
+.panel-title:after{content:'⌄';margin-left:7px;color:#8cbcff}
+.panel-title[aria-expanded=false]:after{content:'›'}
+#jointControlPanel.collapsed .joint-pulse-settings,#jointControlPanel.collapsed .agent-bridge-row,#jointControlPanel.collapsed #jointControlRows,#jointControlPanel.collapsed #stopJoints{display:none!important}
+#jointControlPanel.collapsed .joint-control-heading{margin-bottom:0}
+#takesPanel.collapsed #takeList,#takesPanel.collapsed #clearTakes{display:none!important}
+#takesPanel.collapsed .takes-heading{padding-bottom:0;border-bottom:0}
+#takesPanel .takes-heading{align-items:center;gap:4px}
+#takeCount{margin-left:5px;color:#92aac9}
+#gymTransport[data-mode=teach]{width:max-content;max-width:calc(100% - 20px);flex-wrap:nowrap;justify-content:flex-start;gap:8px;overflow-x:auto;overflow-y:hidden}
+#gymTransport[data-mode=teach] #teachSide,#gymTransport[data-mode=teach] #sessionActions{display:contents}
+#gymTransport[data-mode=teach] #teachControls{order:0;display:flex;flex:none;flex-wrap:nowrap;justify-content:flex-start;overflow:visible}
+#gymTransport[data-mode=teach] #teachClipKeys{order:1;flex:none;flex-wrap:nowrap;justify-content:flex-start}
+#gymTransport[data-mode=teach] #resetGym{order:2;flex:none}
+#gymTransport[data-mode=teach] #saveTake{order:3;flex:none}
+#gymTransport[data-mode=teach] button,#gymTransport[data-mode=teach] select{flex:none;white-space:nowrap}
+.dock:has(.toolbar.build-ui:not([hidden])){max-width:calc(100% - 20px)}
+.toolbar.build-ui{flex-wrap:nowrap!important;overflow-x:auto;max-width:calc(100vw - 20px);align-items:center}
+.toolbar.build-ui>button{flex:none;white-space:nowrap}
+#networkView[data-mode=learn] #takePredictionLegend .take-series-toggle:before{color:var(--curve-color,#62adff)}
+
+#networkView[data-mode=learn] #trainingPlot{min-height:130px}
+
+.dock:has(.toolbar.build-ui:not([hidden])){width:max-content;left:50%;right:auto;transform:translateX(-50%);max-width:calc(100% - 20px)}
+.toolbar.build-ui{width:max-content;max-width:calc(100vw - 20px)}
+#takesPanel{width:214px}
+body #takesPanel .panel-title{white-space:nowrap;min-width:80px}
+#gymTransport[data-mode=teach] #bufferTime{order:4;flex:none;margin-left:auto;white-space:nowrap}
