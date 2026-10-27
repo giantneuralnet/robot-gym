@@ -1,10 +1,10 @@
 const {run}=require('./gym.test.cjs'),assert=require('assert');
 run("selectRig('arm');G.teachNoise=false;switchGym('teach');resetSimulation({randomize:false})");
 assert.equal(run('model.pins.length'),5);assert.equal(run('model.boxes.filter(b=>!b.anchored).length'),5);
-assert(run('model.pins.slice(3).every(j=>j.a===4&&box(j.b).h===1.2)'),'Both fingers are single long palm-mounted parts');
+assert(run('model.pins.slice(3).every(j=>j.a===4&&box(j.b).h===.96)'),'Both fingers are single long palm-mounted parts');
 assert.equal(run('G.clips[0].joints.join()'),'3,4');assert(run('G.clips[1].frames.at(-1).a[0]>0&&G.clips[1].frames.at(-1).a[1]<0'),'Open spreads fingers outward');
 assert.equal(run("parseJointAnglePoses('[0,0,0,-12,12]')[0].length"),5);
-run('G.mousePresent=true;G.mouse={...followPosition()};toggleFollow(true);playClip(1);G.mouse={x:.15,y:-1.35};for(let i=0;i<240;i++)gymStep();playClip(0);for(let i=0;i<120;i++)gymStep();G.mouse={x:.15,y:-2.4};for(let i=0;i<240;i++)gymStep()');
+run('G.mousePresent=true;G.mouse={...followPosition()};toggleFollow(true);playClip(1);G.mouse={x:.15,y:-1.11};for(let i=0;i<240;i++)gymStep();playClip(0);for(let i=0;i<120;i++)gymStep();G.mouse={x:.15,y:-2.4};for(let i=0;i<240;i++)gymStep()');
 assert(run('-G.sim.cube.getPosition().y>1.2'),'Two long fingers physically pick up and lift the cube');
 run('playClip(1);for(let i=0;i<300;i++)gymStep()');assert(run('-G.sim.cube.getPosition().y<.5'),'Wider Open releases the cube');
 run('createGymModel()');assert.equal(run('G.policy.architecture.output'),5);assert.equal(run('G.policy.architecture.input'),7);assert(run('!!validateProject(JSON.parse(JSON.stringify(projectSnapshot()))).policy'));
