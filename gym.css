@@ -197,3 +197,8 @@ body #recordClip.recording,body .clip-record.recording{position:relative;font-si
 #takeList{display:flex;flex-direction:column;gap:var(--panel-gap)}
 .take-row{gap:var(--panel-gap);padding:0}
 #gymTransport[data-mode=teach]{grid-template-columns:repeat(3,max-content) 42px;gap:var(--panel-gap)}
+
+/* Compact panel tops and clear space beside native dropdown arrows. */
+#jointControlPanel,#takesPanel,#clipsSide,#partPopup,.joint-settings,#modelMenu{padding-top:4px!important}
+#networkView[data-mode=learn]>#learnSide{padding-top:4px}
+body #modelMenu select{padding-right:28px!important}
