@@ -1,0 +1,6 @@
+const assert=require('assert');const {run,els,windowListeners}=require('./gym.test.cjs');
+run("selectRig('arm');G.teachNoise=false;switchGym('teach');resetSimulation({randomize:false});G.clips=defaultGripClips();refreshGym();const escapeTakes=G.takes.length;toggleFollow(true);for(let i=0;i<60;i++)gymStep();G.sim.cube.setTransform(planck.Vec2(3,-2),1)");
+assert(run('G.sessionRecording&&G.buffer.length>0'));assert(els.followPoint.hidden&&els.removeFollow.hidden);assert(!els.teachClipRow.hidden);
+const handler=windowListeners.keydown.find(h=>h.opts?.capture).fn;let stopped=false;handler({key:'Escape',code:'Escape',target:{tagName:'SELECT'},preventDefault(){},stopImmediatePropagation(){stopped=true}});
+assert(stopped);assert.equal(run('G.takes.length'),run('escapeTakes'),'Escape does not save a take');assert(run('!G.sessionRecording&&!G.followEngaged&&!G.run&&!G.auto&&G.buffer.length===0'));assert(run('G.sim.joints.every(j=>Math.abs(j.getJointAngle())<1e-9)'));assert(run('Math.abs(G.sim.cube.getPosition().x-G.cubeStart.x)<1e-9'));
+run("switchGym('run')");assert(els.teachClipRow.hidden);console.log('Escape discards and resets Teach even with a focused selector; Build-only follow tools and separate clip row: pass');
