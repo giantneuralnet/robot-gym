@@ -76,7 +76,7 @@ body .icon,body #removeFollow,body #closeTakePrediction,body #nextClipKey,body .
 #gymTransport[data-mode=teach] #teachSide{flex:0 0 100%}#teachControls{gap:8px!important;justify-content:center}#teachControls>*{order:0}#teachControls #teachHz{order:1}#teachControls .check{order:2}#teachControls #toggleTakes{order:3}#teachControls #removeFollow{order:0}
 #sessionActions{gap:8px;align-items:center}#sessionActions #resetGym{order:0}#sessionActions #teachClipKeys{order:1}#sessionActions #saveTake{order:2}#teachClipKeys{gap:6px!important}
 #gymTransport[data-mode=teach] #sessionActions{width:100%;justify-content:space-between;flex-wrap:nowrap}#gymTransport[data-mode=teach] #teachClipKeys{flex:1;justify-content:center;min-width:0;flex-wrap:wrap}
-#gymTransport[data-mode=run]{flex-wrap:nowrap}#gymTransport[data-mode=run] #sessionActions{order:0;flex:none}#gymTransport[data-mode=run] #runControls{order:1;display:flex;gap:8px;align-items:center}#runControls .eval-rate{order:0}#runControls #runInferenceStatus{order:1}#runControls #pauseModel{order:2}#runControls #runModel{order:3}
+#gymTransport[data-mode=run]{flex-wrap:nowrap}#gymTransport[data-mode=run] #sessionActions{order:0;flex:none}#gymTransport[data-mode=run] #runControls{order:1;display:flex;gap:8px;align-items:center}#runControls .eval-rate{order:0}#runControls #runInferenceStatus{order:1}#runControls #runModel{order:2}
 #gymTransport[data-mode=network] #networkNavigation{order:0}#gymTransport[data-mode=network] #sessionActions{order:1;margin-left:12px}
 #toggleTakes.active{background:#347fd8!important}#takesPanel{top:12px}#networkColorMode{width:auto}
 @media(max-width:600px){:root{--control-height:36px;--control-font:11px}#gymTransport{gap:6px}body button,body select,body input[type=number],body input[type=text],body input:not([type]){padding:0 8px!important}#trainControls{gap:5px}#trainControls>label:not(.check)>span{display:none}#trainControls #modelRate{width:54px}#trainControls #trainingDevice{max-width:90px}#trainControls #trainNetwork{min-width:64px;padding:0 10px!important}#sessionActions{gap:5px}#gymTransport[data-mode=run] #runControls{gap:5px}.model-fields label{grid-template-columns:minmax(0,1fr) 90px}#takesPanel{top:8px}.modes button{padding:0 5px!important}}
@@ -122,8 +122,8 @@ body .icon,body #removeFollow,body #closeTakePrediction,body #nextClipKey,body .
 
 /* Panels remain available through their headings, without toolbar switches. */
 body #jointControlPanel .panel-title,body #takesPanel .panel-title{border:0!important;background:transparent!important;text-align:left;flex:1;padding:0 4px!important;box-shadow:none;font-weight:600}
-.panel-title:after{content:'⌄';margin-left:7px;color:#8cbcff}
-.panel-title[aria-expanded=false]:after{content:'›'}
+.panel-title:after{content:'';display:inline-block;width:5px;height:5px;border-right:1.5px solid #8cbcff;border-bottom:1.5px solid #8cbcff;margin-left:9px;vertical-align:3px;transform:rotate(45deg)}
+.panel-title[aria-expanded=false]:after,details:not([open])>summary.panel-title:after{transform:rotate(-45deg);vertical-align:1px}
 #jointControlPanel.collapsed .joint-pulse-settings,#jointControlPanel.collapsed .agent-bridge-row,#jointControlPanel.collapsed #jointControlRows,#jointControlPanel.collapsed #stopJoints{display:none!important}
 #jointControlPanel.collapsed .joint-control-heading{margin-bottom:0}
 #takesPanel.collapsed #takeList,#takesPanel.collapsed #clearTakes{display:none!important}
@@ -158,15 +158,15 @@ body #recordClip.recording,body .clip-record.recording{position:relative;font-si
 #recordClip.recording:after,.clip-record.recording:after{width:2px;height:14px}
 .clip-frame-count{flex:none;align-self:center;white-space:nowrap;color:#a8b5c8;font:10px var(--mono);text-align:right;min-width:48px}
 
-/* Clips sit above Teach settings; follow-point editing belongs to Build. */
-#gymTransport[data-mode=teach]{display:grid;grid-template-columns:max-content max-content max-content minmax(42px,1fr);grid-template-rows:auto auto;gap:8px;justify-content:center}
+/* Teach clips are a separate strip above the single-row toolbar. */
+#gymTransport[data-mode=teach]{display:grid;grid-template-columns:max-content max-content max-content minmax(42px,1fr);gap:8px;justify-content:center}
 #gymTransport[data-mode=teach]:has(#teachSide:not([hidden])){width:min(760px,calc(100% - 20px));max-width:calc(100% - 20px)}
-#gymTransport[data-mode=teach] #teachClipRow{grid-column:1/-1;grid-row:1;min-width:0;overflow-x:auto;display:flex;justify-content:center;border-bottom:1px solid #414750;padding-bottom:8px}
-#gymTransport[data-mode=teach] #teachClipKeys{display:flex;flex-wrap:nowrap;flex:none;justify-content:center}
-#gymTransport[data-mode=teach] #teachControls{grid-row:2;grid-column:1}
-#gymTransport[data-mode=teach] #resetGym{grid-row:2;grid-column:2}
-#gymTransport[data-mode=teach] #saveTake{grid-row:2;grid-column:3}
-#gymTransport[data-mode=teach] #bufferTime{grid-row:2;grid-column:4;justify-self:end}
+#teachClipRow{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(var(--control-height) + 38px + env(safe-area-inset-bottom));width:max-content;max-width:calc(100% - 20px);overflow-x:auto;z-index:4}
+#teachClipRow #teachClipKeys{display:flex;flex-wrap:nowrap;gap:6px;margin:0;padding:0;border:0;width:max-content}
+#gymTransport[data-mode=teach] #teachControls{grid-row:1;grid-column:1}
+#gymTransport[data-mode=teach] #resetGym{grid-row:1;grid-column:2}
+#gymTransport[data-mode=teach] #saveTake{grid-row:1;grid-column:3}
+#gymTransport[data-mode=teach] #bufferTime{grid-row:1;grid-column:4;justify-self:end}
 
 /* Direct joint targets use the same compact controls as the pulse buttons. */
 .joint-control-row span{white-space:nowrap;font-variant-numeric:tabular-nums}
@@ -175,3 +175,5 @@ body #recordClip.recording,body .clip-record.recording{position:relative;font-si
 #jointAngleInput:focus{outline:1px solid #609ff2}
 #jointAngleError{grid-column:1/-1;color:#d8b0b0;font-size:11px}
 #jointControlPanel.collapsed .joint-angle-form{display:none}
+
+#modelMenu summary.panel-title{list-style:none;font-weight:600;color:#b9d8ff}#modelMenu summary.panel-title::-webkit-details-marker{display:none}
