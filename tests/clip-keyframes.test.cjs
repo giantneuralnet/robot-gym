@@ -1,8 +1,8 @@
 const assert=require('assert');const {run,els}=require('./gym.test.cjs');
 run("selectRig('arm');G.teachNoise=false;switchGym('clips');resetSimulation({randomize:false});G.clips=[];$('clipName').value='Grip poses';recordClipSlot(0);for(let i=0;i<120;i++)gymStep()");
-assert.equal(run('G.clipRecording.frames.length'),0,'Time and physics do not record clip frames');assert.equal(els.recordClip.textContent,'+');assert(!els.finishClipRecording.hidden);
+assert.equal(run('G.clipRecording.frames.length'),0,'Time and physics do not record clip frames');assert.equal(els.recordClip.textContent,'+');assert.equal(els.clipCaptureCount.textContent,'0 frames');assert(!els.finishClipRecording.hidden);
 run('G.sim.targets[3]=-.35;G.sim.targets[5]=.35;for(let i=0;i<120;i++)gymStep();recordClipSlot(0)');
-assert.equal(run('G.clipRecording.frames.length'),1);assert.equal(run('G.clipRecording.frames[0].t'),0);
+assert.equal(run('G.clipRecording.frames.length'),1);assert.equal(els.clipCaptureCount.textContent,'1 frame');assert.equal(run('G.clipRecording.frames[0].t'),0);
 run('G.sim.targets[3]=-.6;G.sim.targets[5]=.6;for(let i=0;i<240;i++)gymStep()');assert.equal(run('G.clipRecording.frames.length'),1);
 run('recordClipSlot(0);const capturedFinal=G.clipRecording.frames[1].a.slice();finishClip()');
 assert.equal(run('G.clips[0].frames.length'),2);assert.equal(run('G.clips[0].frames[1].t'),.35,'Waiting is not recorded as playback duration');assert(run('G.clips[0].keyframes'));assert(els.finishClipRecording.hidden);

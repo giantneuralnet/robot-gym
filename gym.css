@@ -149,3 +149,11 @@ body #jointControlPanel .panel-title,body #takesPanel .panel-title{border:0!impo
 #takesPanel{width:214px}
 body #takesPanel .panel-title{white-space:nowrap;min-width:80px}
 #gymTransport[data-mode=teach] #bufferTime{order:4;flex:none;margin-left:auto;white-space:nowrap}
+
+/* Clip capture controls use geometric centering, independent of font metrics. */
+body #recordClip,body .clip-record{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:var(--control-height);padding:0!important;line-height:1!important;text-align:center}
+body #recordClip.recording,body .clip-record.recording{position:relative;font-size:0!important}
+#recordClip.recording:before,.clip-record.recording:before,#recordClip.recording:after,.clip-record.recording:after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:currentColor;border-radius:1px;pointer-events:none}
+#recordClip.recording:before,.clip-record.recording:before{width:14px;height:2px}
+#recordClip.recording:after,.clip-record.recording:after{width:2px;height:14px}
+.clip-frame-count{flex:none;align-self:center;white-space:nowrap;color:#a8b5c8;font:10px var(--mono);text-align:right;min-width:48px}
