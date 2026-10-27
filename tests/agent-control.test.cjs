@@ -1,0 +1,20 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');const {run,box,els}=require('./gym.test.cjs');
+const protocol=require('../agent-protocol.js');
+assert.throws(()=>protocol.batch({commands:[{joint:1,velocity_deg_s:NaN,duration_ms:100}]}));
+assert.throws(()=>protocol.batch({commands:[{joint:8,velocity_deg_s:10,duration_ms:100}]},7));
+assert.throws(()=>protocol.batch({commands:[{joint:1,velocity_deg_s:20,duration_ms:500},{joint:1,velocity_deg_s:-20,start_ms:100,duration_ms:100}]}));
+box.setTimeout=(...args)=>setTimeout(...args);box.clearTimeout=clearTimeout;box.location={protocol:'file:'};
+const registered=[];box.document.modelContext={registerTool:tool=>registered.push(tool)};
+const create=box.document.createElement;box.document.createElement=(...args)=>Object.assign(create(...args),{toDataURL:()=> 'data:image/png;base64,iVBORw0KGgo='});
+for(const f of ['agent-protocol.js','agent-control.js'])vm.runInContext(fs.readFileSync(require('path').join(__dirname,'..',f),'utf8'),box,{filename:f});
+(async()=>{
+ assert.equal(registered.length,4);run("switchGym('teach');G.teachNoise=false;resetSimulation()");const observation=await registered.find(t=>t.name==='robot_observe').execute({});assert.equal(observation.content[1].type,'image');const firstTiming=JSON.parse(observation.content[0].text).timing;assert(firstTiming.browser.capture_ms>=0);assert(firstTiming.browser.execution_ms>=firstTiming.browser.capture_ms);assert.equal(firstTiming.transport,'browser-local');
+ let result=run("RobotGymAgent.execute('robot_move',{commands:[{joint:1,velocity_deg_s:30,duration_ms:500},{joint:2,velocity_deg_s:-30,duration_ms:500},{joint:4,velocity_deg_s:15,start_ms:500,duration_ms:500}],wait_ms:1100})");
+ run('for(let i=0;i<30;i++)gymStep()');assert(Math.abs(run('G.sim.targets[0]')-Math.PI/12)<1e-9);assert(Math.abs(run('G.sim.targets[1]')+Math.PI/12)<1e-9);assert.equal(run('G.sim.targets[3]'),0);
+ run('for(let i=0;i<36;i++)gymStep();RobotGymAgent.afterFrame()');const image=await result;assert.equal(image.content[1].type,'image');const timing=JSON.parse(image.content[0].text).timing;assert.equal(timing.browser.requested_wait_ms,1100);assert(timing.browser.first_step_delay_ms>=0);assert.equal(timing.browser.simulated_elapsed_ms,1100);assert(Math.abs(run('G.sim.targets[3]')-Math.PI/24)<1e-9);assert(run('G.run&&!G.auto&&!G.sessionRecording'));assert(!/angles|coordinates|targets/.test(image.content[0].text));
+ result=run("RobotGymAgent.execute('robot_move',{commands:[{joint:2,velocity_deg_s:30,start_ms:500,duration_ms:1000}]})");const stopped=result.catch(e=>e.message);run("$('stopJoints').click();for(let i=0;i<100;i++)gymStep()");assert.equal(await stopped,'Stopped');assert.equal(run('Object.keys(G.jointPulses).length'),0);assert(run('G.run'));
+ result=run("RobotGymAgent.execute('robot_move',{commands:[{joint:2,velocity_deg_s:30,duration_ms:500}],wait_ms:100})");run('for(let i=0;i<6;i++)gymStep();RobotGymAgent.afterFrame()');await result;await assert.rejects(run("RobotGymAgent.execute('robot_move',{commands:[{joint:1,velocity_deg_s:30,duration_ms:500}]})"),/already active/);run('for(let i=0;i<30;i++)gymStep();RobotGymAgent.afterFrame()');
+ const before=run('JSON.stringify(G.sim.targets)');await assert.rejects(run("RobotGymAgent.execute('robot_move',{commands:[{joint:1,velocity_deg_s:70,duration_ms:500}]})"));assert.equal(run('JSON.stringify(G.sim.targets)'),before);
+ result=run("RobotGymAgent.execute('robot_move',{commands:[{joint:1,velocity_deg_s:30,duration_ms:500}]})");const cancelled=result.catch(e=>e.message);run("switchGym('build')");assert.match(await cancelled,/scene change/);
+ console.log('Simultaneous/delayed pulses, image-only observation, live physics, Stop, scene cancellation, overlap validation and early snapshots: pass');
+})().catch(error=>{console.error(error);process.exitCode=1});

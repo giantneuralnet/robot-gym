@@ -1,0 +1,6 @@
+dist/
+outputs/
+.openai/
+tests/.worker-fixture.json
+__pycache__/
+.DS_Store

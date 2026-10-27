@@ -1,0 +1,17 @@
+const assert=require('assert');
+const {run}=require('./gym.test.cjs');
+run("selectRig('arm');G.teachNoise=false;switchGym('teach');resetSimulation({randomize:false})");
+assert(run('model.pins.every(j=>j.limits===false)'));
+assert(run('G.sim.joints.every(j=>!j.isLimitEnabled())'));
+run("G.jointPulses[2]={direction:1,speed:Math.PI/3,remaining:600};for(let i=0;i<600;i++)gymStep()");
+assert(run('G.sim.targets[2]>Math.PI*3'),'Servo targets can accumulate multiple turns');
+assert(run('G.sim.joints[2].getJointAngle()>Math.PI*2'),'Wrist physically turns beyond 360 degrees');
+run("const savedArm=projectSnapshot();savedArm.model.pins.forEach(j=>delete j.limits);adoptProject(savedArm)");
+assert(run('model.pins.every(j=>j.limits===false)'),'Older saved arms gain unlimited joints');
+run("switchGym('build');selection={type:'pin',id:model.pins[0].id};drawHandles()");
+assert(run("!handles().some(h=>h.key==='low'||h.key==='high')"),'Unlimited joints have no limit handles');
+run("selectRig('balance');G.teachNoise=false;switchGym('teach');resetSimulation({randomize:false})");
+assert(run('G.sim.joints[0].isLimitEnabled()'),'Balance rig retains its limits');
+run("G.jointPulses[0]={direction:1,speed:Math.PI/3,remaining:120};for(let i=0;i<120;i++)gymStep()");
+assert(Math.abs(run('G.sim.targets[0]')-35*Math.PI/180)<1e-9);
+console.log('Unlimited arm physics, multi-turn pulses, saved-arm migration, and limited balance rig: pass');

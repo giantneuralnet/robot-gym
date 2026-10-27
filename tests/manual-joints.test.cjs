@@ -1,0 +1,16 @@
+const assert=require('assert');
+const {run,els}=require('./gym.test.cjs');
+run("switchGym('teach');G.teachNoise=false;resetSimulation();$('jointPulseSpeed').value='30';$('jointPulseDuration').value='250';$('jointControlRows').children[0].children[2].click()");
+assert(run('G.run&&!G.auto&&!G.followEngaged&&!G.sessionRecording'));
+run('for(let i=0;i<15;i++)gymStep()');
+assert(Math.abs(run('G.sim.targets[0]')-Math.PI/24)<1e-9,'250 ms pulse at 30 degrees/second advances 7.5 degrees');
+assert.equal(run('Object.keys(G.jointPulses).length'),0);
+const target=run('G.sim.targets[0]');run('for(let i=0;i<60;i++)gymStep()');assert.equal(run('G.sim.targets[0]'),target,'Target holds after pulse');
+assert(run('G.sim.joints[0].getJointAngle()')>.08,'Motor physically moves');
+run("pulseJoint(0,-1);pulseJoint(1,1);for(let i=0;i<15;i++)gymStep()");assert(Math.abs(run('G.sim.targets[0]'))<1e-9);assert(run('G.sim.targets[1]')>.1);
+run("pulseJoint(0,1);$('stopJoints').click()");assert(run('G.run&&!G.auto&&Object.keys(G.jointPulses).length===0'));assert(run('G.sim.targets.every((v,i)=>Math.abs(v-G.sim.joints[i].getJointAngle())<1e-9)'));
+run("$('jointPulseSpeed').value='60';$('jointPulseDuration').value='1000';model.pins[0].limits=true;G.sim.targets[0]=model.pins[0].high*Math.PI/180-.01;pulseJoint(0,1);for(let i=0;i<60;i++)gymStep()");assert.equal(run('G.sim.targets[0]'),run('model.pins[0].high*Math.PI/180'));
+run("pulseJoint(1,1);switchGym('build')");assert.equal(run('Object.keys(G.jointPulses).length'),0);assert(els.jointControlPanel.hidden);
+run("switchGym('run');G.policy=null;pulseJoint(0,-1);gymFrame(.1)");assert(run('G.run&&!G.auto&&G.steps>0'),'Run works manually without a model');
+run("pulseJoint(0,1);resetSimulation()");assert.equal(run('Object.keys(G.jointPulses).length'),0);
+console.log('Timed pulses, independent joints, physical movement, hold, Stop, limits, tab/reset cancellation, no automatic take recording: pass');
