@@ -205,3 +205,5 @@ body #modelMenu select{padding-right:28px!important}
 
 /* Center workspace navigation in the header. */
 body>header .toprow{margin-inline:auto}
+
+#heartColor{width:var(--control-height);height:var(--control-height);padding:4px;border:1px solid #425a79;border-radius:var(--control-radius);background:var(--panel);cursor:pointer}
