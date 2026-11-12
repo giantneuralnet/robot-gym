@@ -1,5 +1,5 @@
 // Four independent legs, with alternating diagonal pairs in this 2D rig.
-// J1–J8: hips/knees. J9–J13: top arm and gripper, held in their Build pose.
+// J1–J8: hips/knees. J9–J13: front arm and gripper, tucked back for walking.
 if (state.joints.length !== 13) return state.targets;
 if (memory.start === undefined) memory.start = state.time;
 const t = Math.max(0, state.time - memory.start - .6);
@@ -24,4 +24,6 @@ for (let leg = 0; leg < 4; leg++) {
   targets[2*leg] = (hip - neutralHip) * 180/Math.PI;
   targets[2*leg+1] = (2*bend + 2*neutralHip) * 180/Math.PI;
 }
+const tuck = Math.min(1, (state.time-memory.start)/2);
+[-60,100,-40].forEach((angle,i)=>targets[8+i]=angle*tuck);
 return targets;

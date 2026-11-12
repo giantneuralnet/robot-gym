@@ -135,8 +135,10 @@ JavaScript observations now include `state.jointTypes` and each part's `vx`, `vy
 
 ### Four-legged robot with gripper arm
 
-Build → **Quadruped** loads a Spot-inspired side-view robot: four independent hip/knee legs and a five-joint top-mounted gripper arm (14 parts, 13 joints). This is a 2D mechanism, not a 3D Spot model. The part limit is now 32 for building larger mechanisms.
+Build → **Quadruped** loads a Spot-inspired side-view robot: four independent hip/knee legs and a five-joint front-mounted gripper arm (14 parts, 13 joints). This is a 2D mechanism, not a 3D Spot model. The part limit is now 32 for building larger mechanisms.
 
-Run → **Walk script**, then **Run**, loads a repeating diagonal-pair gait. J1–J8 drive the four legs; J9–J13 hold the arm and open gripper in the Build pose. The script uses two-link inverse kinematics for each foot's stance/swing path, with a gentle startup ramp. `period`, `stride`, `lift`, and `stance` near the top of the script control the animation. Movement comes from joint motors and ground contact; the body is not anchored or repositioned by the script. **Follow** keeps the walking robot in view; dragging the background switches it off. Reset returns the robot and restarts the cycle. Source: `controllers/quadruped-walk.js`.
+Run → **Walk script**, then **Run**, loads a repeating diagonal-pair gait. J1–J8 drive the four legs; J9–J13 tuck the longer front arm back while walking. The script uses two-link inverse kinematics for each foot's stance/swing path, with a gentle startup ramp. `period`, `stride`, `lift`, and `stance` near the top of the script control the animation. Movement comes from joint motors and ground contact; the body is not anchored or repositioned by the script. **Follow** keeps the walking robot in view; dragging the background switches it off. Reset returns the robot and restarts the cycle. Source: `controllers/quadruped-walk.js`.
 
 `tests/quadruped.test.cjs` verifies a 30-second physical walk with and without a two-physics-step controller delay, upright body posture, held arm pose, scene round-trip, and camera following.
+
+The quadruped front shoulder now sits near the front edge of the body, with about 31% more combined upper-arm/forearm reach and a wider, longer gripper. Its template includes a cube on the floor ahead. Run → **Pick up script** loads the demonstration: Reset, then Run to approach from above, grip, lift and hold. This script is tuned for the template stance; it leaves the legs planted. Walk is a separate flat-ground gait, not obstacle avoidance.
