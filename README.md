@@ -132,3 +132,11 @@ Build → **Pendulum** loads a rail, sliding cart, and freely hinged pole, initi
 The **Linear** Build tool connects two overlapping parts with a prismatic actuator. It uses the anchored part as its first body when present. Select the joint to set its travel limits in meters and its axis in degrees relative to the first part. Rotary joint targets remain degrees; linear joint targets use meters, including bracketed poses and JavaScript return arrays. The physics/recording format stores rotary coordinates in radians and linear coordinates in meters. Free hinges ignore commands.
 
 JavaScript observations now include `state.jointTypes` and each part's `vx`, `vy` (m/s) and `omega` (degrees/s). Existing scripts returning an array still work. For force control, return `{targets: [...], forces: [...]}`: one entry per joint, finite newtons for a linear joint or `null` to use its position servo. Rotary entries must be `null`. Force is capped at ±350 N, applies equally and oppositely to the two bodies along the slider axis, and stops on pause, reset, code edit, error, or controller disable. The example uses ±35 N and runs feedback at 20 Hz while physics continues at 60 Hz. Source: `controllers/inverted-pendulum.js`.
+
+### Four-legged robot with gripper arm
+
+Build → **Quadruped** loads a Spot-inspired side-view robot: four independent hip/knee legs and a five-joint top-mounted gripper arm (14 parts, 13 joints). This is a 2D mechanism, not a 3D Spot model. The part limit is now 32 for building larger mechanisms.
+
+Run → **Walk script**, then **Run**, loads a repeating diagonal-pair gait. J1–J8 drive the four legs; J9–J13 hold the arm and open gripper in the Build pose. The script uses two-link inverse kinematics for each foot's stance/swing path, with a gentle startup ramp. `period`, `stride`, `lift`, and `stance` near the top of the script control the animation. Movement comes from joint motors and ground contact; the body is not anchored or repositioned by the script. **Follow** keeps the walking robot in view; dragging the background switches it off. Reset returns the robot and restarts the cycle. Source: `controllers/quadruped-walk.js`.
+
+`tests/quadruped.test.cjs` verifies a 30-second physical walk with and without a two-physics-step controller delay, upright body posture, held arm pose, scene round-trip, and camera following.
