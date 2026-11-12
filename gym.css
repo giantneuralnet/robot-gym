@@ -207,3 +207,5 @@ body #modelMenu select{padding-right:28px!important}
 body>header .toprow{margin-inline:auto}
 
 #heartColor{width:var(--control-height);height:var(--control-height);padding:4px;border:1px solid #425a79;border-radius:var(--control-radius);background:var(--panel);cursor:pointer}
+
+#controllerPanel{margin-top:8px;display:grid;gap:8px}#controllerCode{width:100%;min-height:140px;resize:vertical;background:#1c2026;color:#e5efff;border:1px solid #414854;border-radius:7px;padding:8px;font:11px/1.5 ui-monospace,monospace}#controllerStatus{font-size:11px;color:#a8b5c8;overflow-wrap:anywhere}#jointControlPanel.collapsed #controllerPanel{display:none}#jointControlPanel:has(#controllerPanel:not([hidden])){width:280px}
