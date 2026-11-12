@@ -24,9 +24,9 @@ function takeObjectGraphSeries(take){
 }
 function takeGraphGroups(){
  const s=takePredictionState,take=G.takes[s.selected],frames=take?.frames||[],start=frames[0]?.t||0,act=G.policy?.architecture.type==='act';
- const cache=s.graphCache;if(cache&&cache.take===take&&cache.act===act&&cache.count===model.pins.length){cache.groups.find(g=>g.id==='joints')?.curves.forEach((curve,j)=>{curve.traces[1].points=s.points.map(p=>({t:p.t,v:p.prediction?.[j]*180/Math.PI}))});return cache.groups}
+ const cache=s.graphCache;if(cache&&cache.take===take&&cache.act===act&&cache.count===model.pins.length){cache.groups.find(g=>g.id==='joints')?.curves.forEach((curve,j)=>{curve.traces[1].points=s.points.map(p=>({t:p.t,v:p.prediction?.[j]*jointDisplayScale(model.pins[j])}))});return cache.groups}
  const actual=act?frames.slice(1).filter(f=>f.commands).map(f=>({t:f.t-start,a:f.commands})):frames.map(f=>({t:f.t-start,a:f.a}));
- const joints={id:'joints',title:act?'Joint actions':'Joint angles',unit:'°',note:act?'Take ━  ACT ╌':'Recorded ━  Predicted ╌',curves:model.pins.map((_,j)=>({key:'j:'+j,label:'Joint '+(j+1),color:takeJointColor(j),traces:[{points:actual.map(p=>({t:p.t,v:p.a?.[j]*180/Math.PI})),dash:[]},{points:s.points.map(p=>({t:p.t,v:p.prediction?.[j]*180/Math.PI})),dash:[5,3]}]}))};
+ const joints={id:'joints',title:act?'Joint actions':'Joint angles',unit:model.pins.some(p=>p.kind==='linear')?'° / m':'°',note:act?'Take ━  ACT ╌':'Recorded ━  Predicted ╌',curves:model.pins.map((_,j)=>({key:'j:'+j,label:'Joint '+(j+1)+(model.pins[j].kind==='linear'?' (m)':''),color:takeJointColor(j),traces:[{points:actual.map(p=>({t:p.t,v:p.a?.[j]*jointDisplayScale(model.pins[j])})),dash:[]},{points:s.points.map(p=>({t:p.t,v:p.prediction?.[j]*jointDisplayScale(model.pins[j])})),dash:[5,3]}]}))};
  const objects=takeObjectGraphSeries(take),objectGroup=(id,title,unit,axes)=>({id,title,unit,note:'X ━  Y ╌',curves:objects.flatMap(o=>axes.map(([axis,label],i)=>({key:'o:'+o.id+':'+axis,label:o.label+' '+label,color:o.color,traces:[{points:o.points.map(p=>({t:p.t,v:p[axis]})),dash:i?[5,3]:[]}]})))});
  const groups=[joints,objectGroup('position','Object position','m',[['x','X'],['y','Y']]),objectGroup('velocity','Object velocity','m/s',[['vx','Vx'],['vy','Vy']])].filter(g=>g.curves.length);s.graphCache={take,act,count:model.pins.length,groups};return groups;
 }

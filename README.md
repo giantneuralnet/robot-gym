@@ -123,3 +123,12 @@ The fast hosted path holds the browser's poll for up to eight seconds, checking 
 Joint controls accept absolute target angles in degrees: `[30, -12, 0, 0, 0]`. Enter or Apply sends the pose; multiple bracketed lists play in order, 0.75 seconds per pose, and hold the last targets. Stop cancels the sequence. Each row shows its measured joint angle.
 
 The Arm template has five joints: shoulder, elbow, wrist and two single-piece 1.2 m gripper fingers. Open spreads the fingers outward. The Balance rig starts its ball centered at x = 0, y = −1.7 m, with a small gap above the plate. Load the updated templates using the Build buttons; existing saved projects remain compatible.
+
+
+### Inverted pendulum and linear actuators
+
+Build → **Pendulum** loads a rail, sliding cart, and freely hinged pole, initially leaning 3.4°. The pole is genuinely unpowered. Run → **Balance script** installs the example feedback controller and enables Manual/JavaScript control; press **Run**. Reset restores the initial lean. The controller stabilizes near upright and returns the cart toward center; it is not a swing-up controller.
+
+The **Linear** Build tool connects two overlapping parts with a prismatic actuator. It uses the anchored part as its first body when present. Select the joint to set its travel limits in meters and its axis in degrees relative to the first part. Rotary joint targets remain degrees; linear joint targets use meters, including bracketed poses and JavaScript return arrays. The physics/recording format stores rotary coordinates in radians and linear coordinates in meters. Free hinges ignore commands.
+
+JavaScript observations now include `state.jointTypes` and each part's `vx`, `vy` (m/s) and `omega` (degrees/s). Existing scripts returning an array still work. For force control, return `{targets: [...], forces: [...]}`: one entry per joint, finite newtons for a linear joint or `null` to use its position servo. Rotary entries must be `null`. Force is capped at ±350 N, applies equally and oppositely to the two bodies along the slider axis, and stops on pause, reset, code edit, error, or controller disable. The example uses ±35 N and runs feedback at 20 Hz while physics continues at 60 Hz. Source: `controllers/inverted-pendulum.js`.
